@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    tier: database-redis
+  name: redis-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        template-name: redis
+        tier: database-redis
+      name: redis-template
+    spec:
+      containers:
+      - image: redis
+        name: nameko-example-redis
+        ports:
+        - name: db-connection
+          containerPort: 6379
+        resources: {}
+      restartPolicy: Always
+status: {}

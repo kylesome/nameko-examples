@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    tier: backend
+  name: gateway-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        template-name: gateway
+        tier: backend
+      name: gateway-template
+    spec:
+      containers:
+      - env:
+        - name: RABBIT_USER
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-user
+        - name: RABBIT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-host
+        - name: RABBIT_MANAGEMENT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-management-port
+        - name: RABBIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: rabbit-password
+        - name: RABBIT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-port
+        image: nameko/nameko-example-gateway:latest
+        name: nameko-example-gateway
+        ports:
+        - name: entrypoint
+          containerPort: 8000
+        resources: {}
+      restartPolicy: Always
+status: {}

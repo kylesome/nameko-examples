@@ -1,0 +1,70 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    tier: backend
+  name: orders-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        template-name: orders
+        tier: backend
+      name: orders-template
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: db-host
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: db-name
+        - name: RABBIT_MANAGEMENT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-management-port
+        - name: RABBIT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-port
+        - name: RABBIT_USER
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: db-password
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: db-user
+        - name: RABBIT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-host
+        - name: RABBIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: rabbit-password
+        image: nameko/nameko-example-orders:latest
+        name: nameko-example-orders
+        ports:
+        - name: entrypoint
+          containerPort: 8000
+        resources: {}
+      restartPolicy: Always
+status: {}

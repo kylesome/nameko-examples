@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    tier: rabbit
+  name: rabbit-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        template-name: rabbit
+        tier: rabbit
+      name: rabbit-template
+    spec:
+      containers:
+      - image: rabbitmq:3.6-management
+        name: nameko-example-rabbitmq
+        ports:
+        - name: management
+          containerPort: 15672
+        - name: amqp
+          containerPort: 5672
+        resources: {}
+      restartPolicy: Always
+status: {}

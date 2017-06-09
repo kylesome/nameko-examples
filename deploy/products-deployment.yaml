@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    tier: backend
+  name: products-deployment
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        template-name: products
+        tier: backend
+    spec:
+      containers:
+      - env:
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: redis-host
+        - name: REDIS_INDEX
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: redis-index
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: redis-port
+        - name: RABBIT_MANAGEMENT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-management-port
+        - name: RABBIT_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-port
+        - name: RABBIT_USER
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-user
+        - name: RABBIT_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-map
+              key: rabbit-host
+        - name: RABBIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: rabbit-password
+        image: nameko/nameko-example-products:latest
+        name: nameko-example-products
+        ports:
+        - containerPort: 8000
+        resources: {}
+      restartPolicy: Always
+status: {}
